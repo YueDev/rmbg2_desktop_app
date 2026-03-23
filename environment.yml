@@ -7,3 +7,7 @@ dependencies:
   - pip
   - pip:
       - customtkinter
+      - onnxruntime>=1.19
+      - numpy
+      - Pillow
+      - pyinstaller

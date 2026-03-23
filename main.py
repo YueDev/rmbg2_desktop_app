@@ -4,6 +4,8 @@ from tkinter import filedialog
 import customtkinter as ctk
 from PIL import Image, ImageTk
 
+from rmbg import remove_background_from_file
+
 ctk.set_appearance_mode("dark")
 
 
@@ -30,10 +32,10 @@ MD3_OUTLINE_VARIANT = "#49454F"
 class ImageApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("图片抠图工具")
+        self.root.title("RMBG2")
         self.root.geometry("1000x600")
+        self.root.resizable(False, False)
         self.root.configure(fg_color=MD3_BACKGROUND)
-        self.root.resizable(width=False, height=False)
 
         self.selected_image_path = None
         self.processed_image_path = None  # 保存处理后的图片路径
@@ -61,7 +63,7 @@ class ImageApp:
 
         self.left_frame = left_frame  # 保存引用用于动态计算
         self.left_image_label = ctk.CTkLabel(left_frame, text="")
-        self.left_image_label.place(relx=0.5, rely=0.5, anchor="center")
+        self.left_image_label.place(relx=0.5, rely=0.43, anchor="center")
 
         self.left_placeholder = ctk.CTkLabel(
             left_frame,
@@ -69,7 +71,7 @@ class ImageApp:
             font=ctk.CTkFont(size=20, weight="normal"),
             text_color=MD3_ON_SURFACE_VARIANT,
         )
-        self.left_placeholder.place(relx=0.5, rely=0.5, anchor="center")
+        self.left_placeholder.place(relx=0.5, rely=0.43, anchor="center")
 
         self.delete_btn = ctk.CTkButton(
             left_frame,
@@ -118,7 +120,7 @@ class ImageApp:
 
         self.right_frame = right_frame  # 保存引用用于动态计算
         self.right_image_label = ctk.CTkLabel(right_frame, text="")
-        self.right_image_label.place(relx=0.5, rely=0.5, anchor="center")
+        self.right_image_label.place(relx=0.5, rely=0.43, anchor="center")
 
         self.save_btn = ctk.CTkButton(
             right_frame,
@@ -141,7 +143,7 @@ class ImageApp:
             font=ctk.CTkFont(size=20, weight="normal"),
             text_color=MD3_ON_SURFACE_VARIANT,
         )
-        self.right_placeholder.place(relx=0.5, rely=0.5, anchor="center")
+        self.right_placeholder.place(relx=0.5, rely=0.43, anchor="center")
 
     def select_image(self):
         # 已有图片时不重复添加
@@ -169,7 +171,7 @@ class ImageApp:
         w = frame.winfo_width()
         h = frame.winfo_height()
         # 减去按钮高度和padding
-        return max(w - 40, 100), max(h - 100, 100)
+        return max(w - 40, 100), max(h - 140, 100)
 
     def display_left_image(self, path):
         try:
@@ -185,7 +187,7 @@ class ImageApp:
         self.left_frame.update_idletasks()
         w = self.left_frame.winfo_width()
         h = self.left_frame.winfo_height()
-        size = (max(w - 40, 100), max(h - 100, 100))
+        size = (max(w - 40, 100), max(h - 140, 100))
         img = self.left_photo.copy()
         img.thumbnail(size, Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(img)
@@ -210,7 +212,9 @@ class ImageApp:
         """实际处理图片"""
         if self.selected_image_path:
             try:
-                img = Image.open(self.selected_image_path)
+                # 使用 RMBG 移除背景
+                result_img = remove_background_from_file(self.selected_image_path)
+
                 # 保存处理后的图片到临时文件
                 import tempfile
 
@@ -221,11 +225,11 @@ class ImageApp:
                 self.processed_image_path = os.path.join(
                     temp_dir, f"{original_name}_rmbg.png"
                 )
-                img.save(self.processed_image_path)
-                self.right_photo = img  # 保存原图引用
+                result_img.save(self.processed_image_path, format="PNG")
+                self.right_photo = result_img  # 保存处理后图片引用
                 self._resize_right_image()
             except Exception as e:
-                self.right_placeholder.configure(text="处理失败")
+                self.right_placeholder.configure(text=f"处理失败: {str(e)}")
                 self.right_placeholder.lift()
 
     def _resize_right_image(self):
@@ -233,7 +237,7 @@ class ImageApp:
         self.right_frame.update_idletasks()
         w = self.right_frame.winfo_width()
         h = self.right_frame.winfo_height()
-        size = (max(w - 40, 100), max(h - 100, 100))
+        size = (max(w - 40, 100), max(h - 140, 100))
         img = self.right_photo.copy()
         img.thumbnail(size, Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(img)

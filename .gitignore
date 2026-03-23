@@ -6,26 +6,40 @@ __pycache__/
 .Python
 env/
 venv/
-ENV/
-*.egg-info/
-dist/
+.env/
+.venv/
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.ruby-lsp/
+
+# PyInstaller
+*.spec
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Temp files
-*.tmp
-*.log
-*.bak
-
-# Image app specific
-*.png.bak
-*.jpg.bak
+# Project specific
+*.dmg
+models/*.onnx
