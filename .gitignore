@@ -27,6 +27,7 @@ wheels/
 
 # PyInstaller
 *.spec
+build_dmg/
 
 # macOS
 .DS_Store
