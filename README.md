@@ -42,14 +42,15 @@ Run the following command:
 
 ```bash
 pyinstaller --noconfirm \
-  --name "RMBGApp" \
+  --name "RMBG2" \
   --windowed \
   --add-data "models:models" \
   --collect-all customtkinter \
+  --icon "icons.icns" \
   main.py
 ```
 
-*After execution is complete, the application bundle structure `RMBGApp.app` will be automatically generated in the `dist/` folder in the current directory. You can double-click `RMBGApp.app` here directly to test if it works.*
+*After execution is complete, the application bundle structure `RMBG2.app` will be automatically generated in the `dist/` folder in the current directory. You can double-click `RMBG2.app` here directly to test if it works.*
 
 ### 2. Package into a directly distributable `.dmg` installer (with "Drag to Applications" shortcut)
 
@@ -58,16 +59,18 @@ To provide a graphical interface for "drag-and-drop installation" when double-cl
 ```bash
 # 1. Create a temporary folder for packaging and copy the application
 mkdir -p build_dmg
-cp -r dist/RMBGApp.app build_dmg/
+cp -r dist/RMBG2.app build_dmg/
 
 # 2. Create a shortcut pointing to the system's /Applications inside the temporary folder
 ln -s /Applications build_dmg/Applications
 
 # 3. Use hdiutil to build the final image based on the temporary folder
-hdiutil create -volname "RMBGApp" -srcfolder build_dmg -ov -format UDZO RMBGApp.dmg
+hdiutil create -volname "RMBG2" -srcfolder build_dmg -ov -format UDZO RMBG2.dmg
 
 # (Optional) Clean up the temporary directory
 rm -rf build_dmg
+rm -rf build
+rm -rf dist
 ```
 
-*This command will generate a standard `RMBGApp.dmg` in the current directory. Once opened, you can drag the App into your Applications folder.*
+*This command will generate a standard `RMBG2.dmg` in the current directory. Once opened, you can drag the App into your Applications folder.*
