@@ -16,6 +16,8 @@ conda activate rmbg2_desktop_app
 
 ## Running the Application
 
+Download fp16 onnx model from https://huggingface.co/briaai/RMBG-2.0, put it into models/rmbg20_model_fp16.onnx.
+
 The project includes a script that can detect the current conda environment and launch the application proactively. You can run it directly by double-clicking it in Finder:
 
 ```bash
